@@ -50,6 +50,7 @@ namespace gcgcg
 
     private List<Ponto4D> pontosControle;
     private int pontoAtualIndex = 0;
+    private Circulo circuloMenor;
 
 
     public Mundo(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings)
@@ -89,14 +90,27 @@ namespace gcgcg
       #endregion
 #endif
 
-#region Objeto: circulo - origem
-      objetoSelecionado = new Circulo(mundo, ref rotuloAtual, 0.4)
+      #region Objeto: circulo menor (raio = 0,1)
+      circuloMenor = new Circulo(mundo, ref rotuloAtual, new Ponto4D(0.0, 0.0), 0.1, true) // true para desenhar o ponto central
       {
-        ShaderObjeto = new Shader("Shaders/shader.vert", "Shaders/shaderAmarela.frag")
+        ShaderObjeto = new Shader("Shaders/shader.vert", "Shaders/shaderAmarela.frag"),
+        PrimitivaTipo = PrimitiveType.LineLoop // para desenhar o contorno do círculo
       };
-      objetoSelecionado.PrimitivaTipo = PrimitiveType.LineLoop;
-      objetoSelecionado.PrimitivaTamanho = 1;
+      grafoLista.Add(rotuloAtual, circuloMenor);
       #endregion
+
+      #region Objeto: circulo maior (raio = 0,3)
+      var circuloMaior = new Circulo(mundo, ref rotuloAtual, new Ponto4D(0.0, 0.0), 0.3) // Círculo maior sem ponto central
+      {
+        ShaderObjeto = new Shader("Shaders/shader.vert", "Shaders/shaderVerde.frag"),
+        PrimitivaTipo = PrimitiveType.LineLoop // para desenhar o contorno do círculo
+      };
+      grafoLista.Add(rotuloAtual, circuloMaior);
+      #endregion
+
+
+
+      objetoSelecionado = circuloMaior;
 
 
 #if CG_Privado
@@ -149,43 +163,24 @@ namespace gcgcg
         Close();
 
       if (estadoTeclado.IsKeyPressed(Keys.Space))
-      {
-        // Avança para o próximo ponto de controle
-        pontoAtualIndex = (pontoAtualIndex + 1) % pontosControle.Count; // Seleciona o próximo ponto
+        objetoSelecionado = Grafocena.GrafoCenaProximo(mundo, objetoSelecionado, grafoLista);
 
-        // Atualiza a spline com a troca do ponto (troca = true)
-        spline.AtualizarSpline(new Ponto4D(0, 0, 0), true); // Passa 'true' para trocar o ponto de controle
-      }
-
-      if (estadoTeclado.IsKeyPressed(Keys.C)) // Cima
-      {
-        spline.AtualizarSpline(new Ponto4D(0, 0.01, 0), false); // 'false' para não trocar o ponto, só mover
-      }
-
-      if (estadoTeclado.IsKeyPressed(Keys.B)) // Baixo
-      {
-        spline.AtualizarSpline(new Ponto4D(0, -0.01, 0), false); // 'false' para mover o ponto atual para baixo
-      }
-
-      if (estadoTeclado.IsKeyPressed(Keys.E)) // Esquerda
-      {
-        spline.AtualizarSpline(new Ponto4D(-0.01, 0, 0), false); // 'false' para mover o ponto atual para esquerda
-      }
-
-      if (estadoTeclado.IsKeyPressed(Keys.D)) // Direita
-      {
-        spline.AtualizarSpline(new Ponto4D(0.01, 0, 0), false); // 'false' para mover o ponto atual para direita
-      }
-
-      if (estadoTeclado.IsKeyPressed(Keys.Comma)) // Direita
-      {
-        spline.DiminuirPontosSpline(); // 'false' para mover o ponto atual para direita
-      }
-
-            if (estadoTeclado.IsKeyPressed(Keys.Equal)) // Direita
-      {
-        spline.AumentarPontosSpline(); // 'false' para mover o ponto atual para direita
-      }
+       if (estadoTeclado.IsKeyPressed(Keys.C)) // Cima
+        {
+            circuloMenor.Mover('C');
+        }
+        if (estadoTeclado.IsKeyPressed(Keys.B)) // Baixo
+        {
+            circuloMenor.Mover('B');
+        }
+        if (estadoTeclado.IsKeyPressed(Keys.E)) // Esquerda
+        {
+            circuloMenor.Mover('E');
+        }
+        if (estadoTeclado.IsKeyPressed(Keys.D)) // Direita
+        {
+            circuloMenor.Mover('D');
+        }
 
       if (estadoTeclado.IsKeyPressed(Keys.G))
         Grafocena.GrafoCenaImprimir(mundo, grafoLista);
