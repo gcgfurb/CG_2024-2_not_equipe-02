@@ -175,11 +175,7 @@ namespace gcgcg
       if (estadoTeclado.IsKeyPressed(Keys.Enter))
       {
         Console.WriteLine("## 2. Estrutura de dados: polígono - Enter");
-        matrizGrafo.AtribuirIdentidade();
-        mundo.Desenhar(matrizGrafo, objetoNovo);
         objetoSelecionado = objetoNovo;
-        if (objetoSelecionado != null)
-          objetoSelecionado.ObjetoAtualizar();
         desenhando = false;
       }
 
@@ -214,6 +210,17 @@ namespace gcgcg
       if (estadoTeclado.IsKeyPressed(Keys.P) && objetoSelecionado != null)
       {
         Console.WriteLine("## 7. Interação: desenho - Tecla P");
+        if (objetoSelecionado.PrimitivaTipo == PrimitiveType.LineStrip)
+        {
+          Console.WriteLine("## 7. Interação: Fechado");
+          objetoSelecionado.PrimitivaTipo = PrimitiveType.LineLoop;
+        }
+        else if (objetoSelecionado.PrimitivaTipo == PrimitiveType.LineLoop)
+        {
+          Console.WriteLine("## 7. Interação: Aberto");
+          objetoSelecionado.PrimitivaTipo = PrimitiveType.LineStrip;
+        }
+
       }
 
       // ## 8. Interação: cores
@@ -360,7 +367,12 @@ namespace gcgcg
           [
             new Ponto4D(novoPonto),
           ];
-          objetoNovo = new Poligono(mundo, ref rotuloAtual, pontosPoligonoDes);
+          if (objetoSelecionado != null)
+          {
+            objetoNovo = new Poligono(objetoSelecionado, ref rotuloAtual, pontosPoligonoDes);
+          } else {
+            objetoNovo = new Poligono(mundo, ref rotuloAtual, pontosPoligonoDes);
+          }
           Console.WriteLine("MouseX " + ClientSize.X + "MouseY " + ClientSize.Y);
           objetoNovo.PontosAdicionar(novoPonto);
           desenhando = true;
