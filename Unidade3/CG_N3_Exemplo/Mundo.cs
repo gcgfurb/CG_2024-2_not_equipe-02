@@ -104,19 +104,19 @@ namespace gcgcg
       ];
       objetoSelecionado = new Poligono(objetoSelecionado, ref rotuloAtual, teste);
 
-      // #region Objeto: polígono qualquer, só para testes e ajudar no desenvolvimento  
-      // List<Ponto4D> pontosPoligonoBandeiraB =
-      // [
-      //   new Ponto4D(-0.25, -0.25),
-      //   new Ponto4D(-0.75, -0.25),
-      //   new Ponto4D(-0.75, -0.75),
-      //   new Ponto4D(-0.50, -0.50),
-      //   new Ponto4D(-0.25, -0.75),
-      // ];
-      // objetoSelecionado = new Poligono(mundo, ref rotuloAtual, pontosPoligonoBandeiraB);
-      // #endregion
+      #region Objeto: polígono qualquer, só para testes e ajudar no desenvolvimento  
+      List<Ponto4D> pontosPoligonoBandeiraB =
+      [
+        new Ponto4D(-0.25, -0.25),
+        new Ponto4D(-0.75, -0.25),
+        new Ponto4D(-0.75, -0.75),
+        new Ponto4D(-0.50, -0.50),
+        new Ponto4D(-0.25, -0.75),
+      ];
+      objetoSelecionado = new Poligono(mundo, ref rotuloAtual, pontosPoligonoBandeiraB);
+      #endregion
 
-      // objetoSelecionado = null;
+      objetoSelecionado = null;
     }
 
     protected override void OnRenderFrame(FrameEventArgs e)
@@ -205,7 +205,7 @@ namespace gcgcg
       if (estadoTeclado.IsKeyPressed(Keys.E) && objetoSelecionado != null)
       {
         Console.WriteLine("## 5. Estrutura de dados: vértices remover - Tecla E");
-                Ponto4D novoPonto = Utilitario.NDC_TelaSRU(ClientSize.X, ClientSize.Y, new Ponto4D(MousePosition.X, MousePosition.Y));
+        Ponto4D novoPonto = Utilitario.NDC_TelaSRU(ClientSize.X, ClientSize.Y, new Ponto4D(MousePosition.X, MousePosition.Y));
         objetoSelecionado.PontoMaisPerto(novoPonto, true);
       }
 
@@ -218,53 +218,132 @@ namespace gcgcg
 
       // ## 8. Interação: cores
       // Utilize o teclado (teclas R=vermelho,G=verde,B=azul) para trocar as cores dos polígonos selecionado.  
-      if (estadoTeclado.IsKeyPressed(Keys.R) && objetoSelecionado != null) {
+      if (estadoTeclado.IsKeyPressed(Keys.R) && objetoSelecionado != null)
+      {
         Console.WriteLine("## 8. Interação: cores - vermelho - Tecla R");
         objetoSelecionado.ShaderObjeto = _shaderVermelha;
       }  // R=vermelho
-        
-      if (estadoTeclado.IsKeyPressed(Keys.G) && objetoSelecionado != null) {
-         Console.WriteLine("## 8. Interação: cores - verde - Tecla G");
+
+      if (estadoTeclado.IsKeyPressed(Keys.G) && objetoSelecionado != null)
+      {
+        Console.WriteLine("## 8. Interação: cores - verde - Tecla G");
         objetoSelecionado.ShaderObjeto = _shaderVerde;
       } // G=verde
-      if (estadoTeclado.IsKeyPressed(Keys.B) && objetoSelecionado != null) {
+      if (estadoTeclado.IsKeyPressed(Keys.B) && objetoSelecionado != null)
+      {
         Console.WriteLine("## 8. Interação: cores - azul - Tecla B");
         objetoSelecionado.ShaderObjeto = _shaderAzul;
       }  // B=azul
-        
+
 
       // ## 10. Transformações Geométricas: translação
       // Utilizando as teclas das setas direcionais (cima/baixo,direita,esquerda) movimente o polígono selecionado.  
       if (estadoTeclado.IsKeyPressed(Keys.Left) && objetoSelecionado != null)
+      {
         Console.WriteLine("## 10. Transformações Geométricas: translação - esquerda");
+        // int qtd = objetoSelecionado.PontosListaTamanho;
+        // for (int i = 0; i < qtd; i++)
+        // {
+        //   Console.WriteLine("Pontos ID " + objetoSelecionado.PontosId(i));
+        //   objetoSelecionado.MatrizTranslacaoXYZ(0.1, 0.0 , 0.0);
+        // }
+        objetoSelecionado.MatrizTranslacaoXYZ(-0.1, 0.0, 0.0);
+      }
+
       if (estadoTeclado.IsKeyPressed(Keys.Right) && objetoSelecionado != null)
+      {
         Console.WriteLine("## 10. Transformações Geométricas: translação - direita");
+        // int qtd = objetoSelecionado.PontosListaTamanho;
+        // for (int i = 0; i < qtd; i++)
+        // {
+        //   Console.WriteLine("Pontos ID " + objetoSelecionado.PontosId(i));
+
+        //   Ponto4D pto = new Ponto4D(objetoSelecionado.PontosId(i).X + 0.1, objetoSelecionado.PontosId(i).Y);
+        //   objetoSelecionado.PontosAlterar(pto, i);
+        // }
+        objetoSelecionado.MatrizTranslacaoXYZ(0.1, 0.0, 0.0);
+      }
+
       if (estadoTeclado.IsKeyPressed(Keys.Up) && objetoSelecionado != null)
+      {
         Console.WriteLine("## 10. Transformações Geométricas: translação - cima");
+        // int qtd = objetoSelecionado.PontosListaTamanho;
+        // for (int i = 0; i < qtd; i++)
+        // {
+        //   Console.WriteLine("Pontos ID " + objetoSelecionado.PontosId(i));
+
+        //   Ponto4D pto = new Ponto4D(objetoSelecionado.PontosId(i).X, objetoSelecionado.PontosId(i).Y + 0.1);
+        //   objetoSelecionado.PontosAlterar(pto, i);
+        // }
+        objetoSelecionado.MatrizTranslacaoXYZ(0.0, 0.1, 0.0);
+      }
       if (estadoTeclado.IsKeyPressed(Keys.Down) && objetoSelecionado != null)
+      {
         Console.WriteLine("## 10. Transformações Geométricas: translação - baixo");
+        // int qtd = objetoSelecionado.PontosListaTamanho;
+        // for (int i = 0; i < qtd; i++)
+        // {
+        //   Console.WriteLine("Pontos ID " + objetoSelecionado.PontosId(i));
+
+        //   Ponto4D pto = new Ponto4D(objetoSelecionado.PontosId(i).X, objetoSelecionado.PontosId(i).Y -0.1);
+        //   objetoSelecionado.PontosAlterar(pto, i);
+        // }
+        objetoSelecionado.MatrizTranslacaoXYZ(0.0, -0.1, 0.0);
+      }
+
       // ## 11. Transformações Geométricas: escala
       // Utilizando as teclas PageUp/PageDown redimensione o polígono selecionado em relação ao SRU.  [TODO: testar]
       if (estadoTeclado.IsKeyPressed(Keys.PageUp) && objetoSelecionado != null)
+      {
         Console.WriteLine("## 11. Transformações Geométricas: escala - PageUp");
+        objetoSelecionado.MatrizEscalaXYZ(1.1, 1.1, 1.1);
+      }
+
       if (estadoTeclado.IsKeyPressed(Keys.PageDown) && objetoSelecionado != null)
+      {
         Console.WriteLine("## 11. Transformações Geométricas: escala - PageDown");
+        objetoSelecionado.MatrizEscalaXYZ(0.9, 0.9, 0.9);
+      }
       // Utilizando as teclas Home/End redimensione o polígono selecionado em relação ao centro da sua BBox.  [TODO: testar]
       if (estadoTeclado.IsKeyPressed(Keys.Home) && objetoSelecionado != null)
+      {
         Console.WriteLine("## 11. Transformações Geométricas: escala - Home");
+        objetoSelecionado.MatrizEscalaXYZBBox(1.1, 1.1, 1.1);
+      }
+
       if (estadoTeclado.IsKeyPressed(Keys.End) && objetoSelecionado != null)
+      {
         Console.WriteLine("## 11. Transformações Geométricas: escala - End");
+        objetoSelecionado.MatrizEscalaXYZBBox(0.9, 0.9, 0.9);
+      }
+
       // ## 12. Transformações Geométricas: rotação
       // Utilizando as teclas numéricas 1 e 2 gire o polígono selecionado em relação ao SRU.
       if (estadoTeclado.IsKeyPressed(Keys.D1) && objetoSelecionado != null)
+      {
         Console.WriteLine("## 12. Transformações Geométricas: rotação - Tecla 1");
+        objetoSelecionado.MatrizRotacao(10);
+      }
+
       if (estadoTeclado.IsKeyPressed(Keys.D2) && objetoSelecionado != null)
+      {
         Console.WriteLine("## 12. Transformações Geométricas: rotação - Tecla 2");
+        objetoSelecionado.MatrizRotacao(-10);
+      }
+
       // Utilizando as teclas numéricas 3 e 4 gire o polígono selecionado em relação ao centro da sua BBox.
       if (estadoTeclado.IsKeyPressed(Keys.D3) && objetoSelecionado != null)
+      {
         Console.WriteLine("## 12. Transformações Geométricas: rotação - Tecla 3");
+        objetoSelecionado.MatrizRotacaoZBBox(10.0);
+      }
+
       if (estadoTeclado.IsKeyPressed(Keys.D4) && objetoSelecionado != null)
+      {
         Console.WriteLine("## 12. Transformações Geométricas: rotação - Tecla 4");
+        objetoSelecionado.MatrizRotacaoZBBox(-10.0);
+      }
+
       #endregion
 
       #region  Mouse
@@ -282,8 +361,8 @@ namespace gcgcg
             new Ponto4D(novoPonto),
           ];
           objetoNovo = new Poligono(mundo, ref rotuloAtual, pontosPoligonoDes);
-            Console.WriteLine("MouseX " + ClientSize.X + "MouseY " + ClientSize.Y);
-            objetoNovo.PontosAdicionar(novoPonto);
+          Console.WriteLine("MouseX " + ClientSize.X + "MouseY " + ClientSize.Y);
+          objetoNovo.PontosAdicionar(novoPonto);
           desenhando = true;
         }
         else
