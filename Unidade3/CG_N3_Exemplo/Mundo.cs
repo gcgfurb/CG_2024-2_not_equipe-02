@@ -24,6 +24,7 @@ namespace gcgcg
     private Objeto objetoNovo = null;
     private Transformacao4D matrizGrafo = new();
     private bool desenhando = false;
+    Objeto pai = mundo;
 
 #if CG_Gizmo
     private readonly float[] _sruEixos =
@@ -185,6 +186,7 @@ namespace gcgcg
       {
         Console.WriteLine("## 3. Estrutura de dados: polígono - Tecla D");
         objetoSelecionado.ObjetoRemover();
+        objetoSelecionado = null;
       }
 
       // ## 4. Estrutura de dados: vértices mover
@@ -214,13 +216,12 @@ namespace gcgcg
         {
           Console.WriteLine("## 7. Interação: Fechado");
           objetoSelecionado.PrimitivaTipo = PrimitiveType.LineLoop;
-        }
-        else if (objetoSelecionado.PrimitivaTipo == PrimitiveType.LineLoop)
+        }else if (objetoSelecionado.PrimitivaTipo == PrimitiveType.LineLoop)
         {
           Console.WriteLine("## 7. Interação: Aberto");
           objetoSelecionado.PrimitivaTipo = PrimitiveType.LineStrip;
         }
-
+        
       }
 
       // ## 8. Interação: cores
@@ -359,33 +360,32 @@ namespace gcgcg
       // Utilize o mouse para clicar na tela com botão direito e poder desenhar um novo polígono.  
       if (MouseState.IsButtonPressed(MouseButton.Right))
       {
+        Console.WriteLine("MouseState.IsButtonReleased(MouseButton.Right1)" + desenhando);
         if (!desenhando)
         {
           Ponto4D novoPonto = Utilitario.NDC_TelaSRU(ClientSize.X, ClientSize.Y, new Ponto4D(MousePosition.X, MousePosition.Y));
-          Console.WriteLine("MouseX " + ClientSize.X + "MouseY " + ClientSize.Y);
           List<Ponto4D> pontosPoligonoDes =
           [
             new Ponto4D(novoPonto),
           ];
-          if (objetoSelecionado != null)
+          if (objetoSelecionado != null) {
+            Console.WriteLine(objetoSelecionado);
+            pai = objetoSelecionado;
+          } else
           {
-            objetoNovo = new Poligono(objetoSelecionado, ref rotuloAtual, pontosPoligonoDes);
-          } else {
-            objetoNovo = new Poligono(mundo, ref rotuloAtual, pontosPoligonoDes);
+            Console.WriteLine("objetoSelecionado: MUNDO \n__________________________________\n");
+            pai = mundo;
           }
-          Console.WriteLine("MouseX " + ClientSize.X + "MouseY " + ClientSize.Y);
+          objetoNovo = new Poligono(pai, ref rotuloAtual, pontosPoligonoDes);
           objetoNovo.PontosAdicionar(novoPonto);
           desenhando = true;
         }
-        else
-        {
-          if (desenhando)
+        else if (desenhando)
           {
             Ponto4D novoPonto = Utilitario.NDC_TelaSRU(ClientSize.X, ClientSize.Y, new Ponto4D(MousePosition.X, MousePosition.Y));
-            Console.WriteLine("MouseX " + ClientSize.X + "MouseY " + ClientSize.Y);
             objetoNovo.PontosAdicionar(novoPonto); // Atualiza o polígono e o grafo automaticamente
           }
-        }
+        
       }
       if (MouseState.IsButtonReleased(MouseButton.Right))
       {
