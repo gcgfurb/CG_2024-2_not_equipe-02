@@ -84,38 +84,38 @@ namespace gcgcg
       #endregion
 #endif
 
-      #region Objeto: polígono qualquer, só para testes e ajudar no desenvolvimento  
-      List<Ponto4D> pontosPoligonoBandeiraA =
-      [
-        new Ponto4D(0.25, 0.25),
-        new Ponto4D(0.75, 0.25),
-        new Ponto4D(0.75, 0.75),
-        new Ponto4D(0.50, 0.50),
-        new Ponto4D(0.25, 0.75),
-      ];
-      objetoSelecionado = new Poligono(mundo, ref rotuloAtual, pontosPoligonoBandeiraA);
-      #endregion
+      // #region Objeto: polígono qualquer, só para testes e ajudar no desenvolvimento  
+      // List<Ponto4D> pontosPoligonoBandeiraA =
+      // [
+      //   new Ponto4D(0.25, 0.25),
+      //   new Ponto4D(0.75, 0.25),
+      //   new Ponto4D(0.75, 0.75),
+      //   new Ponto4D(0.50, 0.50),
+      //   new Ponto4D(0.25, 0.75),
+      // ];
+      // objetoSelecionado = new Poligono(mundo, ref rotuloAtual, pontosPoligonoBandeiraA);
+      // #endregion
 
-      List<Ponto4D> teste =
-      [
-        new Ponto4D(0.0, 0.0),
-        new Ponto4D(0.2, 0.0),
-        new Ponto4D(0.2, 0.2),
-        new Ponto4D(0.0, 0.2),
-      ];
-      objetoSelecionado = new Poligono(objetoSelecionado, ref rotuloAtual, teste);
+      // List<Ponto4D> teste =
+      // [
+      //   new Ponto4D(0.0, 0.0),
+      //   new Ponto4D(0.2, 0.0),
+      //   new Ponto4D(0.2, 0.2),
+      //   new Ponto4D(0.0, 0.2),
+      // ];
+      // objetoSelecionado = new Poligono(objetoSelecionado, ref rotuloAtual, teste);
 
-      #region Objeto: polígono qualquer, só para testes e ajudar no desenvolvimento  
-      List<Ponto4D> pontosPoligonoBandeiraB =
-      [
-        new Ponto4D(-0.25, -0.25),
-        new Ponto4D(-0.75, -0.25),
-        new Ponto4D(-0.75, -0.75),
-        new Ponto4D(-0.50, -0.50),
-        new Ponto4D(-0.25, -0.75),
-      ];
-      objetoSelecionado = new Poligono(mundo, ref rotuloAtual, pontosPoligonoBandeiraB);
-      #endregion
+      // #region Objeto: polígono qualquer, só para testes e ajudar no desenvolvimento  
+      // List<Ponto4D> pontosPoligonoBandeiraB =
+      // [
+      //   new Ponto4D(-0.25, -0.25),
+      //   new Ponto4D(-0.75, -0.25),
+      //   new Ponto4D(-0.75, -0.75),
+      //   new Ponto4D(-0.50, -0.50),
+      //   new Ponto4D(-0.25, -0.75),
+      // ];
+      // objetoSelecionado = new Poligono(mundo, ref rotuloAtual, pontosPoligonoBandeiraB);
+      // #endregion
 
       objetoSelecionado = null;
     }
@@ -216,12 +216,13 @@ namespace gcgcg
         {
           Console.WriteLine("## 7. Interação: Fechado");
           objetoSelecionado.PrimitivaTipo = PrimitiveType.LineLoop;
-        }else if (objetoSelecionado.PrimitivaTipo == PrimitiveType.LineLoop)
+        }
+        else if (objetoSelecionado.PrimitivaTipo == PrimitiveType.LineLoop)
         {
           Console.WriteLine("## 7. Interação: Aberto");
           objetoSelecionado.PrimitivaTipo = PrimitiveType.LineStrip;
         }
-        
+
       }
 
       // ## 8. Interação: cores
@@ -368,10 +369,12 @@ namespace gcgcg
           [
             new Ponto4D(novoPonto),
           ];
-          if (objetoSelecionado != null) {
+          if (objetoSelecionado != null)
+          {
             Console.WriteLine(objetoSelecionado);
             pai = objetoSelecionado;
-          } else
+          }
+          else
           {
             Console.WriteLine("objetoSelecionado: MUNDO \n__________________________________\n");
             pai = mundo;
@@ -381,11 +384,11 @@ namespace gcgcg
           desenhando = true;
         }
         else if (desenhando)
-          {
-            Ponto4D novoPonto = Utilitario.NDC_TelaSRU(ClientSize.X, ClientSize.Y, new Ponto4D(MousePosition.X, MousePosition.Y));
-            objetoNovo.PontosAdicionar(novoPonto); // Atualiza o polígono e o grafo automaticamente
-          }
-        
+        {
+          Ponto4D novoPonto = Utilitario.NDC_TelaSRU(ClientSize.X, ClientSize.Y, new Ponto4D(MousePosition.X, MousePosition.Y));
+          objetoNovo.PontosAdicionar(novoPonto); // Atualiza o polígono e o grafo automaticamente
+        }
+
       }
       if (MouseState.IsButtonReleased(MouseButton.Right))
       {
@@ -416,10 +419,87 @@ namespace gcgcg
 
         Ponto4D sruPonto = Utilitario.NDC_TelaSRU(ClientSize.X, ClientSize.Y, new Ponto4D(MousePosition.X, MousePosition.Y));
         Console.WriteLine("Vector2 mousePosition (NDC): " + MousePosition);
+
+        // if (objetoSelecionado == null)
+        // {
+        //   Objeto obj = Grafocena.GrafoCenaProximo(mundo, null, grafoLista);
+        //   if (obj != null)
+        //   {
+        //     obj.ObjetoAtualizar();
+        //     BBox caixa = obj.Bbox();
+        //     caixa.Dentro(sruPonto);
+        //     Console.WriteLine("Dentro da caixa OBJ " + caixa.Dentro(sruPonto));
+        //     if (caixa.Dentro(sruPonto))
+        //     {
+        //       if (obj.ScanLine(sruPonto, ref objetoSelecionado))
+        //       {
+        //         obj = objetoSelecionado;
+        //       }
+        //     }
+        //     Console.WriteLine("OBJ " + obj.Rotulo);
+        //   }
+        // }
+
+        if (objetoSelecionado == null)
+        {
+          Console.WriteLine("OBJ ");
+          Objeto obj = Grafocena.GrafoCenaProximo(mundo, null, grafoLista);
+          if (obj != null)
+          {
+            obj.ObjetoAtualizar();
+          }
+          while (obj != null)
+          {
+            BBox caixa = obj.Bbox();
+            caixa.Dentro(sruPonto);
+            Console.WriteLine("Dentro da caixa OBJ " + caixa.Dentro(sruPonto));
+            if (caixa.Dentro(sruPonto))
+            {
+              if (obj.ScanLine(sruPonto, ref objetoSelecionado))
+              {
+                obj = objetoSelecionado;
+                return;
+              }
+            }
+            obj = Grafocena.GrafoCenaProximo(mundo, obj, grafoLista);
+            if (obj != null)
+            {
+              obj.ObjetoAtualizar();
+              Console.WriteLine("OBJ " + obj.Rotulo);
+            }
+            
+          }
+        }
+
         if (objetoSelecionado != null)
         {
-          sruPonto = objetoSelecionado.MatrizGlobalInversa(sruPonto);
-          Console.WriteLine("Vector2 mousePosition (Objeto): " + MousePosition);
+          Objeto obj = Grafocena.GrafoCenaProximo(mundo, null, grafoLista);
+          if (obj != null)
+          {
+            obj.ObjetoAtualizar();
+          }
+          while (obj != null)
+          {
+            BBox caixa = obj.Bbox();
+            caixa.Dentro(sruPonto);
+            Console.WriteLine("Dentro da caixa OBJ " + caixa.Dentro(sruPonto));
+            if (caixa.Dentro(sruPonto))
+            {
+              if (obj.ScanLine(sruPonto, ref objetoSelecionado))
+              {
+                obj = objetoSelecionado;
+                return;
+              }
+            }
+            obj = Grafocena.GrafoCenaProximo(mundo, obj, grafoLista);
+            if (obj != null)
+            {
+              obj.ObjetoAtualizar();
+              Console.WriteLine("OBJ " + obj.Rotulo);
+            }
+            
+          }
+
         }
       }
 
