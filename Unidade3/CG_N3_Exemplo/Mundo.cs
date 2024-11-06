@@ -420,25 +420,6 @@ namespace gcgcg
         Ponto4D sruPonto = Utilitario.NDC_TelaSRU(ClientSize.X, ClientSize.Y, new Ponto4D(MousePosition.X, MousePosition.Y));
         Console.WriteLine("Vector2 mousePosition (NDC): " + MousePosition);
 
-        // if (objetoSelecionado == null)
-        // {
-        //   Objeto obj = Grafocena.GrafoCenaProximo(mundo, null, grafoLista);
-        //   if (obj != null)
-        //   {
-        //     obj.ObjetoAtualizar();
-        //     BBox caixa = obj.Bbox();
-        //     caixa.Dentro(sruPonto);
-        //     Console.WriteLine("Dentro da caixa OBJ " + caixa.Dentro(sruPonto));
-        //     if (caixa.Dentro(sruPonto))
-        //     {
-        //       if (obj.ScanLine(sruPonto, ref objetoSelecionado))
-        //       {
-        //         obj = objetoSelecionado;
-        //       }
-        //     }
-        //     Console.WriteLine("OBJ " + obj.Rotulo);
-        //   }
-        // }
 
         if (objetoSelecionado == null)
         {
@@ -473,6 +454,7 @@ namespace gcgcg
 
         if (objetoSelecionado != null)
         {
+          objetoSelecionado = null;
           Objeto obj = Grafocena.GrafoCenaProximo(mundo, null, grafoLista);
           if (obj != null)
           {
