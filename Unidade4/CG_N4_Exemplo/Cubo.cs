@@ -50,7 +50,7 @@ namespace gcgcg
       base.PontosAdicionar(vertices[6]);
       base.PontosAdicionar(vertices[5]);
       
-      // // 0, 3, 7, 4 Face esquerda
+      // // 0, 3, 7, 4 Face direita
       base.PontosAdicionar(vertices[0]);
       base.PontosAdicionar(vertices[3]);
       base.PontosAdicionar(vertices[7]);
@@ -63,10 +63,10 @@ namespace gcgcg
       base.PontosAdicionar(vertices[1]);
 
       // // 1, 5, 6, 2 Face direita
-      base.PontosAdicionar(vertices[2]);
       base.PontosAdicionar(vertices[1]);
       base.PontosAdicionar(vertices[5]);
       base.PontosAdicionar(vertices[6]);
+      base.PontosAdicionar(vertices[2]);
 
       Atualizar();
     }

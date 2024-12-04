@@ -20,10 +20,58 @@ namespace gcgcg
 {
   public class Mundo : GameWindow
   {
+    private readonly float[] _vertices =
+        {
+             // Position          Normal
+            -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, // Front face
+             0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+             0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+             0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+            -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+            -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+
+            -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f, // Back face
+             0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+             0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+             0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+            -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+            -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+
+            -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f, // Left face
+            -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+            -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+            -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+            -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+            -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+
+             0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f, // Right face
+             0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+             0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+             0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+             0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+             0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+
+            -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f, // Bottom face
+             0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+             0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+             0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+            -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+            -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+
+            -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f, // Top face
+             0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+             0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+             0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+            -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+            -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
+        };
+
+    private readonly Vector3 _lightPos = new Vector3(1f, 1.0f, 8.0f);
     private static Objeto mundo = null;
     private char rotuloNovo = '?';
     private Objeto objetoSelecionado = null;
-    private Matrix4 modelView = Matrix4.LookAt(new Vector3(-1, 1,0), new Vector3(0, 0,0), new Vector3(0, 1,0));
+    private Objeto objetoOrbita;
+    private Matrix4 modelView = Matrix4.LookAt(new Vector3(-1, 1, 0), new Vector3(0, 0, 0), new Vector3(0, 1, 0));
 
     private readonly float[] _sruEixos =
     {
@@ -42,6 +90,12 @@ namespace gcgcg
     private Shader _shaderCiano;
     private Shader _shaderMagenta;
     private Shader _shaderAmarela;
+
+    private bool _firstMove = true;
+    private Vector2 _lastPos;
+    int i = 0;
+
+    private Texture _texture;
 
     private Camera _camera;
 
@@ -89,9 +143,10 @@ namespace gcgcg
       #endregion
 
       #region Objeto: ponto  
-      objetoSelecionado = new Ponto(mundo, ref rotuloNovo, new Ponto4D(2.0, 0.0));
-      objetoSelecionado.PrimitivaTipo = PrimitiveType.Points;
-      objetoSelecionado.PrimitivaTamanho = 5;
+      objetoOrbita = new Ponto(mundo, ref rotuloNovo, new Ponto4D(2.0, 0.0));
+      objetoOrbita.PrimitivaTipo = PrimitiveType.Points;
+      objetoOrbita.PrimitivaTamanho = 6;
+
       #endregion
 
       #region Objeto: Cubo
@@ -102,6 +157,9 @@ namespace gcgcg
       objetoSelecionado.shaderCor = _shaderAmarela;
 
       _camera = new Camera(Vector3.UnitZ * 5, ClientSize.X / (float)ClientSize.Y);
+
+      //_texture = Texture.LoadFromFile("Resources/container.png");
+      //_texture.Use(TextureUnit.Texture0);
     }
 
     protected override void OnRenderFrame(FrameEventArgs e)
@@ -111,6 +169,18 @@ namespace gcgcg
       GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
       mundo.Desenhar(new Transformacao4D(), _camera);
+
+
+      if (i == 10)
+      {
+        objetoOrbita.MatrizRotacao(1);
+        i = 0;
+      }
+      else
+      {
+        i++;
+      }
+
 
 #if CG_Gizmo      
       Gizmo_Sru3D();
@@ -173,7 +243,8 @@ namespace gcgcg
         objetoSelecionado.MatrizRotacaoZBBox(-10);
 
       const float cameraSpeed = 1.5f;
-      const float rotationSpeed = 30f;
+      const float rotationSpeed = 35f;
+      const float sensitivity = 0.2f;
       if (estadoTeclado.IsKeyDown(Keys.Z))
         _camera.Position = Vector3.UnitZ * 5;
       if (estadoTeclado.IsKeyDown(Keys.W))
@@ -218,34 +289,81 @@ namespace gcgcg
 
       #region  Mouse
 
-      if (MouseState.IsButtonPressed(MouseButton.Left))
-      {
-        Console.WriteLine("MouseState.IsButtonPressed(MouseButton.Left)");
-        Console.WriteLine("__ Valores do Espaço de Tela");
-        Console.WriteLine("Vector2 mousePosition: " + MousePosition);
-        Console.WriteLine("Vector2i windowSize: " + ClientSize);
-        Console.WriteLine("Câmera: " +  _camera.GetViewMatrix());
-        _camera.Position = Vector3.UnitZ * 10;
+      // var mouse = MouseState;
 
-      }
-      if (MouseState.IsButtonDown(MouseButton.Right) && objetoSelecionado != null)
-      {
-        Console.WriteLine("MouseState.IsButtonDown(MouseButton.Right)");
+      // if (_firstMove)
+      // {
+      //   _lastPos = new Vector2(mouse.X, mouse.Y);
+      //   _firstMove = false;
+      // }
+      // else
+      // {
+      //   var deltaX = mouse.X - _lastPos.X;
+      //   var deltaY = mouse.Y - _lastPos.Y;
+      //   _lastPos = new Vector2(mouse.X, mouse.Y);
 
+      //   _camera.Yaw += deltaX * sensitivity;
+      //   _camera.Pitch -= deltaY * sensitivity;
+      // }
+
+      if (MouseState.IsButtonDown(MouseButton.Left))
+      {
         int janelaLargura = ClientSize.X;
         int janelaAltura = ClientSize.Y;
         Ponto4D mousePonto = new Ponto4D(MousePosition.X, MousePosition.Y);
         Ponto4D sruPonto = Utilitario.NDC_TelaSRU(janelaLargura, janelaAltura, mousePonto);
+        // _camera.Position += modelView.Column0.Yzx * cameraSpeed * (float)sruPonto.Y / 100;
+        // _camera.Position += modelView.Column0.Zxy * cameraSpeed * (float)sruPonto.X / 100;
+        // Console.WriteLine("MouseState.IsButtonPressed(MouseButton.Left)");
+        // Console.WriteLine("__ Valores do Espaço de Tela");
+        // Console.WriteLine("Vector2 mousePosition: " + MousePosition);
+        // Console.WriteLine("Vector2i windowSize: " + ClientSize);
+        // Console.WriteLine("Câmera: " + _camera.GetViewMatrix());
+        //_camera.Position = Vector3.UnitZ * 10;
 
-                _camera.Position += modelView.Column0.Yzx * cameraSpeed * (float)sruPonto.Y/100;
-                _camera.Position += modelView.Column0.Zxy * cameraSpeed * (float)sruPonto.X/100;
+        if (_firstMove)
+        {
 
-        //objetoSelecionado.PontosAlterar(sruPonto, 0);
+          _camera.Position = Vector3.UnitZ * 5;
+          _lastPos = new Vector2((float)sruPonto.X, (float)sruPonto.Y);
+          _firstMove = false;
+        }
+        else
+        {
+          var deltaX = sruPonto.X - _lastPos.X;
+          var deltaY = sruPonto.Y - _lastPos.Y;
+          _lastPos = new Vector2((float)sruPonto.X, (float)sruPonto.Y);
+
+          _camera.Pitch -= rotationSpeed * -(float)sruPonto.Y * (float)e.Time;
+          _camera.Position += _camera.Up * cameraSpeed * -(float)sruPonto.Y * (float)e.Time;
+
+          //_camera.Position += _camera.Right * cameraSpeed * (float)sruPonto.X * (float)e.Time;
+          // _camera.Position -= _camera.Right * cameraSpeed * (float)sruPonto.X * (float)e.Time;
+
+          _camera.Yaw -= rotationSpeed * (float)sruPonto.X * (float)e.Time;
+          _camera.Position += _camera.Right * cameraSpeed * (float)1.9 * (float)sruPonto.X * (float)e.Time;
+        }
+
+
       }
-      if (MouseState.IsButtonReleased(MouseButton.Right))
-      {
-        Console.WriteLine("MouseState.IsButtonReleased(MouseButton.Right)");
-      }
+      // if (MouseState.IsButtonDown(MouseButton.Right) && objetoSelecionado != null)
+      // {
+      //   Console.WriteLine("MouseState.IsButtonDown(MouseButton.Right)");
+
+      //   int janelaLargura = ClientSize.X;
+      //   int janelaAltura = ClientSize.Y;
+      //   Ponto4D mousePonto = new Ponto4D(MousePosition.X, MousePosition.Y);
+      //   Ponto4D sruPonto = Utilitario.NDC_TelaSRU(janelaLargura, janelaAltura, mousePonto);
+
+      //   _camera.Position += modelView.Column0.Yzx * cameraSpeed * (float)sruPonto.Y / 100;
+      //   _camera.Position += modelView.Column0.Zxy * cameraSpeed * (float)sruPonto.X / 100;
+
+      //   //objetoSelecionado.PontosAlterar(sruPonto, 0);
+      // }
+      // if (MouseState.IsButtonReleased(MouseButton.Right))
+      // {
+      //   Console.WriteLine("MouseState.IsButtonReleased(MouseButton.Right)");
+      // }
 
       #endregion
 
